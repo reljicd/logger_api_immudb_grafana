@@ -14,6 +14,20 @@ services:
       - ./postgres/import.sql:/docker-entrypoint-initdb.d/2-import.sql
       - ./postgres/users.csv:/data/users.csv
 
+  logger_api:
+    build:
+      context: logger_api
+      dockerfile: docker/Dockerfile
+    depends_on:
+      - postgres
+    environment:
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=logger_api
+      - POSTGRES_DB=logger_api
+    container_name: logger-api
+    ports:
+      - "5001:5001"
 
 networks:
   default:
