@@ -6,7 +6,7 @@ from app.postgres.models import User
 
 @pytest.fixture
 def app():
-    app = create_app()
+    app = create_app({'IMMUDB_DB': 'test'})
     yield app
 
 
