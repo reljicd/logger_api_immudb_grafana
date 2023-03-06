@@ -14,17 +14,31 @@ services:
       - ./postgres/import.sql:/docker-entrypoint-initdb.d/2-import.sql
       - ./postgres/users.csv:/data/users.csv
 
+  immudb:
+    image: codenotary/immudb
+    environment:
+      - IMMUDB_ADMIN_PASSWORD=password
+      - IMMUDB_DIR=/var/db_data
+    ports:
+      - "8080:8080"
+      - "3322:3322"
+    volumes:
+      - ./.db_data:/var/db_data
+
   logger_api:
     build:
       context: logger_api
       dockerfile: docker/Dockerfile
     depends_on:
       - postgres
+      - immudb
     environment:
       - POSTGRES_HOST=postgres
       - POSTGRES_PASSWORD=password
       - POSTGRES_USER=logger_api
       - POSTGRES_DB=logger_api
+      - IMMUDB_HOST=immudb
+      - IMMUDB_PASSWORD=password
     container_name: logger-api
     ports:
       - "5001:5001"
