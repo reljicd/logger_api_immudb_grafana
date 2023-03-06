@@ -1,5 +1,6 @@
 from flask import Flask
 
+from app.immudb.database import init_immudb
 from app.postgres.config.env_vars import (POSTGRES_DB, POSTGRES_HOST,
                                           POSTGRES_PASSWORD, POSTGRES_PORT,
                                           POSTGRES_USER)
@@ -24,6 +25,7 @@ def create_app(test_config=None):
         app.config.from_mapping(test_config)
 
     init_db(app)
+    init_immudb(app)
 
     from .api import health
     app.register_blueprint(health.bp)
