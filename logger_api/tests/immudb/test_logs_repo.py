@@ -23,8 +23,8 @@ def test_batch(app):
 
 def test_count(app):
     with app.app_context():
-        inserted_pk = LogsRepo.insert_one(dummy_log())
-        assert LogsRepo.count() == inserted_pk
+        LogsRepo.insert_one(dummy_log())
+        assert LogsRepo.count(TEST_USER) > 0
 
 
 def test_select_one(app):
@@ -49,7 +49,7 @@ def test_select_last_n(app):
         logs_to_insert = [dummy_log() for _ in range(num_of_logs)]
         LogsRepo.insert_batch(logs_to_insert)
 
-        returned_logs = LogsRepo.select_last_n(num_of_logs)
+        returned_logs = LogsRepo.select_last_n(user=TEST_USER, n=num_of_logs)
         for returned_log in returned_logs:
             assert returned_log in logs_to_insert
 
@@ -57,11 +57,11 @@ def test_select_last_n(app):
 def test_select_bucket(app):
     with app.app_context():
         num_of_logs = 2
-        app = str(uuid.uuid4())
-        logs_to_insert = [dummy_log(app) for _ in range(num_of_logs)]
+        _app = str(uuid.uuid4())
+        logs_to_insert = [dummy_log(_app) for _ in range(num_of_logs)]
         LogsRepo.insert_batch(logs_to_insert)
 
-        returned_logs = LogsRepo.select_bucket(user=TEST_USER, app=app)
+        returned_logs = LogsRepo.select_bucket(user=TEST_USER, app=_app)
         for returned_log in returned_logs:
             assert returned_log in logs_to_insert
 

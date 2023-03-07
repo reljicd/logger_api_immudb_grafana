@@ -57,8 +57,9 @@ class LogsRepo(object):
         return cls._sql_query_to_logs(select_query)
 
     @classmethod
-    def select_last_n(cls, n: int) -> List[Log]:
-        select_query = f"SELECT * FROM logs ORDER BY id DESC LIMIT {n};"
+    def select_last_n(cls, user: str, n: int) -> List[Log]:
+        select_query = (f"SELECT * FROM logs WHERE user='{user}' "
+                        f"ORDER BY id DESC LIMIT {n};")
         return cls._sql_query_to_logs(select_query)
 
     @classmethod
@@ -74,8 +75,8 @@ class LogsRepo(object):
         return cls._sql_query_to_logs(select_query)
 
     @staticmethod
-    def count() -> int:
-        count_sql = 'SELECT COUNT(*) FROM logs;'
+    def count(user: str) -> int:
+        count_sql = f"SELECT COUNT(*) FROM logs WHERE user='{user}';"
         return immu_db.sqlQuery(count_sql)[0][0]
 
     @classmethod
