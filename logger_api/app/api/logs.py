@@ -47,3 +47,10 @@ def insert(user):
         return json, 201
     else:
         return 'Content-Type not supported!', 406
+
+
+@bp.get('/verified/<int:log_id>')
+@api_key_required
+def verified_select_one(user, log_id):
+    log, verified = LogsRepo.verified_select_one(log_id)
+    return {'log': log.log, 'verified': verified}

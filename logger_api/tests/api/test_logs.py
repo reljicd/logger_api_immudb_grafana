@@ -102,3 +102,19 @@ def test_insert(app, client, user):
     assert response.status_code == expected_status_code
     for inserted_log in inserted_logs:
         assert inserted_log.log in logs
+
+
+def test_verified_select_one(app, client, user):
+    log_to_insert = dummy_log(user.username)
+    with app.app_context():
+        inserted_pk = LogsRepo.insert_one(log_to_insert)
+
+    expected_status_code = 200
+
+    response = client.get(f'/logs/verified/{inserted_pk}',
+                          headers={'api-key': user.api_key})
+    response_json = response.json
+
+    assert response.status_code == expected_status_code
+    assert (response_json['log'],
+            response_json['verified']) == (log_to_insert.log, True)
