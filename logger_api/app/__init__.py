@@ -29,5 +29,7 @@ def create_app(test_config=None):
 
     from .api import health
     app.register_blueprint(health.bp)
+    from .api import logs
+    app.register_blueprint(logs.bp)
 
     return app
