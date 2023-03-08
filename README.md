@@ -90,7 +90,6 @@ curl -X GET
 #### /logs/all
 - Description: Print history of stored logs.
 - Method: GET
-- Content Type: application/json
 - URL Structure: ```http://localhost:5001/logs/all```
 - Parameters:
   - app:String - log source app
