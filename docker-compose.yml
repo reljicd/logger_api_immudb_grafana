@@ -22,6 +22,7 @@ services:
     ports:
       - "8080:8080"
       - "3322:3322"
+      - "9497:9497"
     volumes:
       - ./.db_data:/var/db_data
 
@@ -42,6 +43,31 @@ services:
     container_name: logger-api
     ports:
       - "5001:5001"
+
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - ./prometheus/:/etc/prometheus/
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--web.console.libraries=/usr/share/prometheus/console_libraries'
+      - '--web.console.templates=/usr/share/prometheus/consoles'
+    expose:
+      - 9090
+    ports:
+      - 9090:9090
+    restart: always
+
+  grafana:
+    image: grafana/grafana-oss
+    depends_on:
+      - prometheus
+    ports:
+      - 3000:3000
+    volumes:
+      - ./grafana/datasources:/etc/grafana/provisioning/datasources
+      - ./grafana/dashboards:/etc/grafana/provisioning/dashboards
+
 
 networks:
   default:
