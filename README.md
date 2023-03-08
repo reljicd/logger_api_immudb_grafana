@@ -12,7 +12,6 @@
 - **prometheus** - Prometheus configuration. Depends on **immudb**.
 - **postgres** - Import scripts for postgreSQL
 
-
 ## Running the stack
 
 ```bash
@@ -96,8 +95,8 @@ curl -X GET
 - Parameters:
   - app:String - log source app
   - device:String - log source device
-  - limit:Integer - number of logs to return
-  - offset:Integer - id offset
+  - limit:String - number of logs to return
+  - offset:String - id offset
 - Example:
 ```bash
 curl -X GET 
@@ -110,7 +109,7 @@ curl -X GET
 - Method: GET
 - URL Structure: ```http://localhost:5001/logs/verified/1```
 - Parameters:
-  - id:Int - id of log to retrieve and verify
+  - id:Integer - id of log to retrieve and verify
 - Example:
 ```bash
 curl -X GET 
