@@ -1,9 +1,10 @@
 from immudb import ImmudbClient
 from immudb.datatypesv2 import DatabaseSettingsV2
 
-from app.immudb.config.env_vars import IMMUDB_DB, IMMUDB_PASSWORD, IMMUDB_USER
+from app.immudb.config.env_vars import (IMMUDB_DB, IMMUDB_HOST, IMMUDB_PASSWORD,
+                                        IMMUDB_PORT, IMMUDB_USER)
 
-immu_db = ImmudbClient()
+immu_db = ImmudbClient(immudUrl=f'{IMMUDB_HOST}:{IMMUDB_PORT}')
 
 CREATE_LOGS_TABLE_SQL = """
 CREATE TABLE IF NOT EXISTS logs (
