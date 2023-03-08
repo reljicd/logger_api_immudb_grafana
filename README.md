@@ -1,10 +1,32 @@
-# Logger flask API + immudb + Grafana
+# Logger API (flask) + immudb + Grafana
+
+## Architecture
+
+![architecture.png](static%2Farchitecture.png)
+
+## Running the stack
+
+```bash
+docker-compose build
+docker-compose up
+```
+
+## Running backend tests
+
+Run tests only after running previous docker compose up command to have all the dependencies started.
+
+### Logger API
+
+```bash
+docker-compose -f docker-compose.yml run --rm  --entrypoint "python -m pytest tests" logger_api
+```
 
 ## Log generator
 
 https://github.com/mingrammer/flog
 
 ### Usage
+
 ```
 docker run -it --rm mingrammer/flog
 ```
@@ -38,3 +60,27 @@ Options:
   -w, --overwrite          overwrite the existing log files.
   -l, --loop               loop output forever until killed.
 ```
+
+## Grafana
+
+### Web Interface
+
+- URL: http://localhost:3000
+- username: **admin**
+- password: **admin**
+
+Selecting immudb dashboard: **Dashboard -> Services -> immudb**
+
+![grafana.png](static%2Fgrafana.png)
+
+## immudb
+
+https://github.com/codenotary/immudb
+
+### Web Interface
+
+- URL: http://localhost:8080
+- username: **immudb**
+- password: **password**
+
+![immudb.png](static%2Fimmudb.png)
