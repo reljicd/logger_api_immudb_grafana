@@ -4,6 +4,15 @@
 
 ![architecture.png](static%2Farchitecture.png)
 
+### Code organization
+
+- **logger_api/app** - Logger API implemented using flask. Depends on **postgres** and **immudb**
+- **logger_api/tests** - Tests for Logger API. Depends on **postgres** and **immudb**
+- **grafana** - Grafana configuration. Depends on **prometheus**.
+- **prometheus** - Prometheus configuration. Depends on **immudb**.
+- **postgres** - Import scripts for postgreSQL
+
+
 ## Running the stack
 
 ```bash
@@ -19,6 +28,94 @@ Run tests only after running previous docker compose up command to have all the 
 
 ```bash
 docker-compose -f docker-compose.yml run --rm  --entrypoint "python -m pytest tests" logger_api
+```
+
+## Logger API
+### Authentication
+The Logger API uses API keys to authenticate requests. 
+
+You can view and manage demo API keys before running the stack
+in [users.csv](postgres%2Fusers.csv), or by adding new users with their API keys directly in PostgreSQL while stack is up.
+
+You can pass the API key in each requests using the request header **api-key**.
+```bash
+-H "api-key: ef229daa-d058-4dd4-9c93-24761842aec5"
+```
+
+Demo API key: **ef229daa-d058-4dd4-9c93-24761842aec5**
+
+### REST API
+
+#### /logs/
+- Description: Store batch of log lines
+- Method: POST
+- Content Type: application/json
+- URL Structure: ```http://localhost:5001/logs```
+- Parameters:
+  - app:String - log source app 
+  - device:String - log source device 
+  - logs:List[String] - logs
+- Example:
+```bash
+curl -X POST 
+-H "api-key: ef229daa-d058-4dd4-9c93-24761842aec5" 
+-H "Content-Type: application/json" 
+-d '{"app":"demo app", "device":"demo device", "logs":["log 1", "log 2"]}' 
+"http://localhost:5001/logs/"
+```
+
+#### /logs/count
+- Description: Print number of stored logs
+- Method: GET
+- URL Structure: ```http://localhost:5001/logs/count```
+- Example:
+```bash
+curl -X GET 
+-H "api-key: ef229daa-d058-4dd4-9c93-24761842aec5" 
+"http://localhost:5001/logs/count"
+```
+
+#### /logs/tail
+- Description: Print last n logs
+- Method: GET
+- URL Structure: ```http://localhost:5001/logs/tail```
+- Parameters:
+  - n:String - number of logs to retrieve 
+- Example:
+```bash
+curl -X GET 
+-H "api-key: ef229daa-d058-4dd4-9c93-24761842aec5" 
+"http://localhost:5001/logs/tail?n=3"
+```
+
+#### /logs/all
+- Description: Print history of stored logs.
+- Method: GET
+- Content Type: application/json
+- URL Structure: ```http://localhost:5001/logs/all```
+- Parameters:
+  - app:String - log source app
+  - device:String - log source device
+  - limit:Integer - number of logs to return
+  - offset:Integer - id offset
+- Example:
+```bash
+curl -X GET 
+-H "api-key: ef229daa-d058-4dd4-9c93-24761842aec5" 
+"http://localhost:5001/logs/all?app=demo%20app&device=demo%20device&limit=2"
+```
+
+#### /logs/verified/id
+- Description: verified log retrieval
+- Method: GET
+- URL Structure: ```http://localhost:5001/logs/verified/1```
+- Parameters:
+  - id:Int - id of log to retrieve and verify
+- Example:
+```bash
+curl -X GET 
+-H "api-key: ef229daa-d058-4dd4-9c93-24761842aec5" 
+"http://localhost:5001/logs/verified/1""
 ```
 
 ## Log generator
