@@ -170,8 +170,6 @@ Selecting immudb dashboard: **Dashboard -> Services -> immudb**
 
 ## immudb
 
-https://github.com/codenotary/immudb
-
 ### Web Interface
 
 - URL: http://localhost:8080
